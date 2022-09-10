@@ -1,23 +1,32 @@
-  email = Session.getActiveUser().getEmail();
-  sheetGrafik = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Wózek Środa Wielkopolska");
-  sheetOsoby = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Administrator");  
+const  email = Session.getActiveUser().getEmail();
+const sheetGrafik = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Roboczy 2");
+const sheetOsoby = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Administrator");  
 
-// function onOpen(){
-//   isAdmin(sheetOsoby)
-//   dropList(sheetGrafik);
-// }
+var person = getuserData(sheetOsoby);
+   
 
-function empty(){
-  return;
+function onOpen(){
+ isAdmin(sheetOsoby);
+  //dropList(sheetOsoby);
 }
+
+function onEdit(e){
+
+const rangeModifed = e.range;
+SpreadsheetApp.getActive().toast(SpreadsheetApp.getUi().alert(`${rangeModifed.getValue} `, SpreadsheetApp.getUi().ButtonSet.OK));
+
+//  editedCell(person.name, sheetGrafik); 
+}
+function onSelectionChange(e){
+  SpreadsheetApp.getActive().toast(SpreadsheetApp.getUi().alert("działa", SpreadsheetApp.getUi().ButtonSet.OK));
+}
+
 
     
 
 
 
-
 function isAdmin(sheet) {
-
 const data = sheet.getDataRange().getValues();
 
   for (i = 0; i < data.length; i++)
@@ -44,35 +53,104 @@ const data = sheet.getDataRange().getValues();
 
 }
 
-function getUserName(sheet){
 
-  const data = sheet.getDataRange().getValues();
+function getuserData(sheet){
+const data = sheet.getDataRange().getValues();
 
   for (i = 0; i < data.length; i++)
   {
     if(data[i][1] == email)
-        return data[i][0];
+        return person = {name: data[i][0], mail: data[i][1], isAdmin: data[i][2]};
   }
 }
 
 
+function editedCell(person, sheet){
+  var cell = sheet.getDataRange().getActive().getValue();
+  
+SpreadsheetApp.getActive().toast(SpreadsheetApp.getUi().alert(`Średnio działa ${cell.toString()}?`, SpreadsheetApp.getUi().ButtonSet.OK));
+return;
 
- function dropList(e, sheetGrafik, sheetOsoby){
+
+    if (cell.getValue() != person.name){
+      return SpreadsheetApp.getActive().toast(SpreadsheetApp.getUi().alert(`Czy na pewno chcesz nadpisać siebie zamiastr ${(cell.getValue).toString()}?`, SpreadsheetApp.getUi().ButtonSet.OK));
+    }
+    else if (cell.getValue() == person.name){
+       
+      return SpreadsheetApp.getActive().toast(SpreadsheetApp.getUi().alert("Zapisałeś się na wózek", SpreadsheetApp.getUi().ButtonSet.OK));
+    }
+    else{
+      return;
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+// to do?
+
+
+//  function dropList(sheetOsoby){
    
    
-   var cell = SpreadsheetApp.getActiveSpreadsheet().getSelection().getCurrentCell();
+//    var cell = SpreadsheetApp.getActiveSpreadsheet().getSelection().getCurrentCell();
    
-   if (cell.canEdit() == false)
-   return;
+//    if (cell.canEdit() == false ^ cell.isPartOfMerge() == true)
+//    return;
    
-   cell.setBackground('red');
 
-
-sheetOsoby = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Administrator");
-var lista = sheetOsoby.getRange(1,3);
-lista.setValue(getUserName(sheetOsoby));
-cell.setDataValidation(lista)
+//    console.log(cell);
+//  // sheetOsoby.getRange("D2").setValue("coś tam");
+//  //  sheetOsoby.getRange("D2").setNumberFormat('@STRING@').setValue("coś tam");
 
 
 
- }
+//  }
+
+
+//  function createTimeDrivenTriggers() {
+//   // Trigger every 6 hours.
+//   ScriptApp.newTrigger('myFunction')
+//       .timeBased()
+//       .everyHours(6)
+//       .create();
+//   // Trigger every Monday at 09:00.
+//   ScriptApp.newTrigger('myFunction')
+//       .timeBased()
+//       .onWeekDay(ScriptApp.WeekDay.MONDAY)
+//       .atHour(9)
+//       .create();
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
